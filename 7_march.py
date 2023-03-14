@@ -1,13 +1,37 @@
 import os
 
-def get_contents_of_one_file(file_content):
-    file_values = []
-    for row in file_content.split("\n")[1:-1]:
-        file_values.append(row.split)(",")
-    return file_values
+def all_file_read():
+    folder_path = "weatherfiles"
+    files = os.listdir(folder_path)
+    rows = []
 
-def read_files():
-    file_names = os.listdir("weatherfiles")
+    for file_name in files:
+        file_path = os.path.join(folder_path, file_name)
+        with open(file_path, "r") as f:
+            contents = f.readlines()[1:-1]
+            rows.extend(contents)
 
-    file_values = []
+    return rows
 
+file_values =all_file_read()
+
+temps = []
+dates = []
+for row in file_values:
+    row = row.strip()
+    date, temp = row.split(",")[0:2]
+
+    if temp:
+        dates.append(date)
+        temps.append(float(temp))
+
+if temps:
+    min_temp = min(temps)
+    min_date = dates[temps.index(min_temp)]
+
+    max_temp = max(temps)
+    max_date = dates[temps.index(max_temp)]
+    print("Minimum temperature:",min_temp,"/ date:",min_date)
+    print("Maximum temperature:",max_temp,"/ date:",max_date)
+else:
+    print("No values found.")
